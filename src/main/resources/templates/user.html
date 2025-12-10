@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <style>
+        .navbar-dark {
+            background-color: #2d2d2d;
+        }
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            top: 56px; /* высота navbar */
+            left: 0;
+            width: 200px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+            padding-top: 20px;
+        }
+        .content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: white !important;
+        }
+        .logout-btn {
+            color: #6c757d !important;
+            background: none !important;
+            border: none !important;
+            padding: 0.25rem 0.5rem !important;
+        }
+        .logout-btn:hover {
+            color: #495057 !important;
+            background: rgba(0,0,0,0.05) !important;
+            text-decoration: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand" th:text="${user.username} + ' with roles: ' + ${user.roles[0].name}"></span>
+        <div class="ms-auto">
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-sm logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="sidebar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">
+                <span th:text="${#strings.capitalize(#strings.toLowerCase(user.roles[0].name))}">User</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div class="content">
+    <h1>User information-page</h1>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            About user
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.surname}"></td>
+                    <td th:text="${user.age}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.roles[0].name}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

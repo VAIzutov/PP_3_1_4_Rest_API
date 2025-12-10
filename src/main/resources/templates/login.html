@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login page</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+</head>
+
+<div style="max-width: 400px; margin: 0 auto;">
+    <div class="card-body">
+        <h3 class="card-title mb-4 fw-bold">Please sign in</h3>
+
+        <form th:action="@{/login}" method="post">
+            <div class="mb-0">
+                <input type="text"
+                       id="username"
+                       name="username"
+                       class="form-control"
+                       placeholder="Email address"
+                       required>
+            </div>
+            <div class="mb-2">
+                <input type="password"
+                       id="password"
+                       name="password"
+                       class="form-control"
+                       placeholder="Password"
+                       required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</html>
