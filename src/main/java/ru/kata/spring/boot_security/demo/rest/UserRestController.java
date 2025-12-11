@@ -43,7 +43,7 @@ public class UserRestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    // Обновить пользователя с логгмроы
+    // Обновить пользователя
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody String body) {
         System.out.println(">>> PUT BODY: " + body);
