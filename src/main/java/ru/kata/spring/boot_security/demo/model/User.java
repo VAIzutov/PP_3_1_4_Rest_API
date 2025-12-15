@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,10 +41,6 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @Transient
-    @JsonProperty("roleIds")
-    private List<Long> roleIds;
-
     public String getName() {
         return name;
     }
@@ -69,19 +63,6 @@ public class User implements UserDetails {
 
     public void setAge(Integer age) {
         this.age = age;
-    }
-
-    @JsonProperty("roleIds")
-    public List<Long> getRoleIds() {
-        if (roleIds == null && roles != null) {
-            roleIds = roles.stream().map(Role::getId).collect(Collectors.toList());
-        }
-        return roleIds;
-    }
-
-    @JsonProperty("roleIds")
-    public void setRoleIds(List<Long> roleIds) {
-        this.roleIds = roleIds;
     }
 
     public User() {

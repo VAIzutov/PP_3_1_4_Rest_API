@@ -374,7 +374,7 @@
 
         async function loadCurrentUser() {
             try {
-                const response = await fetch('/api/admin/users/current');
+                const response = await fetch('/api/users/current');
                 if (response.ok) {
                     const user = await response.json();
                     document.getElementById('currentUserName').textContent = user.username;

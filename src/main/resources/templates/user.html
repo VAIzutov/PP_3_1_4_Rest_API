@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>User page</title>
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
     <style>
         .navbar-dark {
             background-color: #2d2d2d;
@@ -11,7 +11,7 @@
         .sidebar {
             height: 100vh;
             position: fixed;
-            top: 56px; /* высота navbar */
+            top: 56px;
             left: 0;
             width: 200px;
             background-color: #f8f9fa;
@@ -44,9 +44,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <span class="navbar-brand" th:text="${user.username} + ' with roles: ' + ${user.roles[0].name}"></span>
+        <span class="navbar-brand" id="userInfo">Loading...</span>
         <div class="ms-auto">
-            <form th:action="@{/logout}" method="post" class="d-inline">
+            <form action="/logout" method="post" class="d-inline">
                 <button type="submit" class="btn btn-sm logout-btn">Logout</button>
             </form>
         </div>
@@ -55,9 +55,12 @@
 
 <div class="sidebar">
     <ul class="nav flex-column">
+        <li id="adminLinkItem" class="nav-item d-none">
+            <a class="nav-link" href="/admin">Admin</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link active" href="#">
-                <span th:text="${#strings.capitalize(#strings.toLowerCase(user.roles[0].name))}">User</span>
+                <span id="sidebarRole">User</span>
             </a>
         </li>
     </ul>
@@ -82,14 +85,9 @@
                     <th>Role</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="userTableBody">
                 <tr>
-                    <td th:text="${user.id}"></td>
-                    <td th:text="${user.name}"></td>
-                    <td th:text="${user.surname}"></td>
-                    <td th:text="${user.age}"></td>
-                    <td th:text="${user.username}"></td>
-                    <td th:text="${user.roles[0].name}"></td>
+                    <td colspan="6" class="text-center">Loading...</td>
                 </tr>
                 </tbody>
             </table>
@@ -97,7 +95,47 @@
     </div>
 </div>
 
-<script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+<script src="/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        try {
+            const response = await fetch('/api/users/current');
+            if (!response.ok) throw new Error('Failed to load user');
+            const user = await response.json();
+            const isAdmin = user.roles.some(role => role.name === 'ADMIN');
+            if (isAdmin) {
+                document.getElementById('adminLinkItem').classList.remove('d-none');
+            }
+
+            // Заполняем шапку
+            const rolesStr = user.roles.map(r => r.name).join(', ');
+            document.getElementById('userInfo').textContent = `${user.username} with roles: ${rolesStr}`;
+
+            // Заполняем sidebar
+            const firstRole = user.roles[0]?.name || 'User';
+            document.getElementById('sidebarRole').textContent = firstRole.charAt(0).toUpperCase() + firstRole.slice(1).toLowerCase();
+
+            // Заполняем таблицу
+            const tr = `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.surname}</td>
+                    <td>${user.age}</td>
+                    <td>${user.username}</td>
+                    <td>${rolesStr}</td>
+                </tr>
+            `;
+            document.getElementById('userTableBody').innerHTML = tr;
+
+        } catch (error) {
+            console.error('Error loading user:', error);
+            document.getElementById('userInfo').textContent = 'Error loading user data';
+            document.getElementById('userTableBody').innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load user info</td></tr>';
+        }
+    });
+</script>
 
 </body>
 </html>
